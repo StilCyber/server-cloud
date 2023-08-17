@@ -1,0 +1,5 @@
+{
+    "serverPort": 8888,
+    "DB_URL": "mongodb+srv://stil:AJ455@cloud.agxagjt.mongodb.net/main?retryWrites=true&w=majority",
+    "secretKey": "mern-secret-ulbi-key"
+}
