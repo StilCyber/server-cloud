@@ -4,6 +4,10 @@ import bcrypt from 'bcryptjs'
 import { check, validationResult } from "express-validator"
 import jwt from 'jsonwebtoken'
 import config from "config"
+import { auth } from "../middleware/auth.middleware.js"
+import fileService from "../services/fileService.js"
+import File from "../models/File.js"
+
 
 const router = new Router()
 
@@ -24,7 +28,7 @@ router.post('/registration', [
             const hashPassword = await bcrypt.hash(password, 5)
             const user = new User({email, password: hashPassword})
             await user.save()
-            console.log(email, password)
+            await fileService.createDir(new File({user: user.id, name: ''}))
             return res.json({message: "User was created"})
         }
    
@@ -64,5 +68,25 @@ router.post('/login', async (req, res) => {
     }
 })
 
+router.get('/auth', auth,
+    async (req, res) => {
+        try {
+            const user = await User.findOne({_id: req.user.id})
+            const token = jwt.sign({id: user.id}, config.get("secretKey"), {expiresIn: "1h"})
+            return res.json({
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    diskSpace: user.diskSpace,
+                    usedSpace: user.usedSpace,
+                    avatar: user.avatar
+                }
+            })
+        } catch (e) {
+            console.log(e)
+            res.send({message: "Server error"})
+        }
+    })
 
 export default router

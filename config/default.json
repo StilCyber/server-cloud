@@ -1,5 +1,6 @@
 {
     "serverPort": 8888,
     "DB_URL": "mongodb+srv://stil:AJ455@cloud.agxagjt.mongodb.net/main?retryWrites=true&w=majority",
-    "secretKey": "mern-secret-ulbi-key"
+    "secretKey": "mern-secret-ulbi-key",
+    "filePath": "C:\\Users\\stilCyber\\projects\\full\\mern-cloud\\server-cloud\\files"
 }
