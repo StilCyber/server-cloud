@@ -1,12 +1,15 @@
 import fs from 'fs'
 import File from '../models/File.js'
 import config from "config"
+import path from 'path'
+
 
 
 class FileService {
 
     createDir(file) {
-        const filePath = `${config.get('filePath')}\\${file.user}\\${file.path}`
+        const __dirname = path.resolve()
+        const filePath = path.resolve(__dirname, 'files', `${file.user}`, `${file.path}` )
         return new Promise(((resolve, reject) => {
             try {
                 if (!fs.existsSync(filePath)) {
@@ -22,18 +25,16 @@ class FileService {
     }
 
     deleteFile(file) {
-        const path = this.getPath(file)
+        const __dirname = path.resolve()
+        const pathDelete = path.resolve(__dirname, 'files', `${file.user}`, `${file.path}` )
         if (file.type === 'dir') {
-            fs.rmdirSync(path)
+            fs.rmdirSync(pathDelete)
         } else {
-            fs.unlinkSync(path)
+            fs.unlinkSync(pathDelete)
         }
     }
 
-    getPath(file) {
-        return config.get('filePath') + '\\' + file.user + '\\' + file.path
-    }
-
+  
 }
 
 export default new FileService()
