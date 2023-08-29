@@ -4,7 +4,7 @@ import File from "../models/File.js";
 import config from "config";
 import fs from "fs";
 import path from "path";
-import {v4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 
 
@@ -181,9 +181,11 @@ class FileController {
 
   async uploadAvatar(req, res) {
     try {
+      const __dirname = path.resolve()
       const file = req.files.file
+      console.log(file)
       const user = await User.findById(req.user.id)
-      const avatarName = Uuid.v4() + '.jpg'
+      const avatarName = uuidv4() + '.jpg'
       file.mv(path.resolve(__dirname, 'static', avatarName))
       user.avatar = avatarName
       await user.save()
@@ -197,9 +199,9 @@ class FileController {
 
   async deleteAvatar(req, res) {
     try {
-      
+      const __dirname = path.resolve()
       const user = await User.findById(req.user.id)  
-      fs.unlinkSync(path.resolve(__dirname, 'static', avatarName))
+      fs.unlinkSync(path.resolve(__dirname, 'static', user.avatar))
       user.avatar = null   
       await user.save()
       return res.json(user)
